@@ -142,3 +142,11 @@ system_key_directory: /etc/dse/conf
 # This the only initial value, once it is reconfigured, the new value is stored
 # and retrieved on next run.
 initial_spark_worker_resources: 0.7
+
+audit_logging_options:
+   enabled: <%= node['cassandra']['audit_logging']%>
+   logger:  <%= node['cassandra']['audit_logger']%>
+   excluded_keyspaces: <%= node['cassandra']['excluded_keyspaces']%>
+   included_categories: <%= node['cassandra']['active_categories']%>
+   cassandra_audit_writer_options:
+      num_writers: <%= node['cassandra']['audit_num_writers']%>
