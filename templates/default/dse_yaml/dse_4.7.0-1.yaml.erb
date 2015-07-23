@@ -150,3 +150,13 @@ audit_logging_options:
    included_categories: <%= node['cassandra']['active_categories']%>
    cassandra_audit_writer_options:
       num_writers: <%= node['cassandra']['audit_num_writers']%>
+
+ldap_options:
+   server_host: <%= node['cassandra']['ldap_options']['server_host']%>
+   server_port: <%= node['cassandra']['ldap_options']['server_port']%>
+   search_dn: <%= node['cassandra']['ldap_options']['search_dn']%>
+   search_password: <%= node['cassandra']['ldap_options']['search_password']%>
+   use_ssl: <%= node['cassandra']['ldap_options']['use_ssl']%>
+   use_tls: <%= node['cassandra']['ldap_options']['use_tls']%>
+   user_search_base: <%= node['cassandra']['ldap_options']['user_search_base']%>
+   user_search_filter: <%= node['cassandra']['ldap_options']['user_search_filter']%>

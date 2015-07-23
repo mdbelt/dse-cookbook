@@ -77,6 +77,15 @@ default['cassandra']['active_categories'] = 'ADMIN,AUTH,DDL,DCL'
 default['cassandra']['excluded_keyspaces'] = ''
 default['cassandra']['audit_num_writers'] = 0
 
+default['cassandra']['ldap_options']['server_host'] = ''
+default['cassandra']['ldap_options']['server_port'] = '389'
+default['cassandra']['ldap_options']['search_dn'] = ''
+default['cassandra']['ldap_options']['search_password'] = ''
+default['cassandra']['ldap_options']['use_ssl'] = false
+default['cassandra']['ldap_options']['use_tls'] = false
+default['cassandra']['ldap_options']['user_search_base'] = ''
+default['cassandra']['ldap_options']['user_search_filter'] = '(sAMAccountName={0})'
+
 # Allow pluggable metrics
 default['cassandra']['metrics_reporter']['enabled'] = false
 default['cassandra']['metrics_reporter']['name'] = 'metrics-graphite'
