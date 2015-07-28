@@ -667,11 +667,11 @@ request_scheduler: org.apache.cassandra.scheduler.NoScheduler
 # http://download.oracle.com/javase/6/docs/technotes/guides/security/jsse/JSSERefGuide.html#CreateKeystore
 #
 server_encryption_options:
-    internode_encryption: <%= node["cassandra"]["dse"]["internode_encryption"] %> # none
-    keystore: <%= node["cassandra"]["dse"]["keystore"] %> # resources/dse/conf/.keystore
-    keystore_password: <%= @ssl_password.call %> # cassandra
-    truststore: <%= node["cassandra"]["dse"]["truststore"] %> # resources/dse/conf/.truststore
-    truststore_password: <%= @ssl_password.call %> # cassandra
+    internode_encryption: <%= node["cassandra"]["dse"]["internode_encryption"] %>
+    keystore: <%= node["cassandra"]["dse"]["keystore"] %>
+    keystore_password: <%= @ssl_password.call %>
+    truststore: <%= node["cassandra"]["dse"]["truststore"] %>
+    truststore_password: <%= @ssl_password.call %>
     # More advanced defaults below:
     # protocol: TLS
     # algorithm: SunX509

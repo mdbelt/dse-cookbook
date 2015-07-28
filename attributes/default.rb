@@ -39,8 +39,8 @@ default['cassandra']['log_dir']                = '/var/log/cassandra/'
 default['cassandra']['root_dir']               = '/var/lib/cassandra/'
 default['cassandra']['commit_dir']             = '/var/lib/cassandra/commitlog'
 
-default['cassandra']['listen_address']         = node['ipaddress']
-default['cassandra']['rpc_address']            = node['ipaddress']
+default['cassandra']['listen_address']         = node['fqdn']
+default['cassandra']['rpc_address']            = node['fqdn']
 default['cassandra']['broadcast_address']      = nil
 default['cassandra']['seeds']                  = node['ipaddress']
 default['cassandra']['concurrent_reads']       = 32
