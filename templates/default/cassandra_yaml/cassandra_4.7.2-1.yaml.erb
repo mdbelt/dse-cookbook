@@ -286,7 +286,7 @@ seed_provider:
       parameters:
           # seeds is actually a comma-delimited list of addresses.
           # Ex: "<ip1>,<ip2>,<ip3>"
-          - seeds: "<%= node[:cassandra][:seeds] %>"
+          - seeds: "<%= (node[:cassandra][:seeds].split(',') - [node['ipaddress'], node['hostname'], node['fqdn']]).join(',') %>"
 
 # For workloads with more data than can fit in memory, Cassandra's
 # bottleneck will be reads that need to fetch data from
@@ -799,11 +799,11 @@ request_scheduler: org.apache.cassandra.scheduler.NoScheduler
 # http://download.oracle.com/javase/6/docs/technotes/guides/security/jsse/JSSERefGuide.html#CreateKeystore
 #
 server_encryption_options:
-    internode_encryption: <%= node["cassandra"]["dse"]["internode_encryption"] %> # none
-    keystore: <%= node["cassandra"]["dse"]["keystore"] %> # resources/dse/conf/.keystore
-    keystore_password: <%= @ssl_password.call %> # cassandra
-    truststore: <%= node["cassandra"]["dse"]["truststore"] %> # resources/dse/conf/.truststore
-    truststore_password: <%= @ssl_password.call %> # cassandra
+    internode_encryption: <%= node["cassandra"]["dse"]["internode_encryption"] %>
+    keystore: <%= node["cassandra"]["dse"]["keystore"] %>
+    keystore_password: <%= @ssl_password.call %>
+    truststore: <%= node["cassandra"]["dse"]["truststore"] %>
+    truststore_password: <%= @ssl_password.call %>
     # More advanced defaults below:
     # protocol: TLS
     # algorithm: SunX509
@@ -813,9 +813,9 @@ server_encryption_options:
 
 # enable or disable client/server encryption.
 client_encryption_options:
-    enabled: false
-    keystore: resources/dse/conf/.keystore
-    keystore_password: cassandra
+    enabled: <%= node["cassandra"]["dse"]["client_encryption_enabled"] %>
+    keystore: <%= node["cassandra"]["dse"]["keystore"] %>
+    keystore_password: <%= @ssl_password.call %>
     # require_client_auth: false
     # Set trustore and truststore_password if require_client_auth is true
     # truststore: resources/dse/conf/.truststore
