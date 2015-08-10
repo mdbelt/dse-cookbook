@@ -41,3 +41,6 @@ enabled = <%= node['opscenter']['auth_enabled'] %>
 [labs]
 orbited_longpoll = true
 <% end %>
+
+[agents]
+use_ssl = <%= !node['opscenter']['ssl_keyfile'].empty?%>
