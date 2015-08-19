@@ -50,9 +50,9 @@ ldap_options:
     user_search_filter: <%= node['cassandra']['ldap_options']['user_search_filter']%>
     # Validity period for the credentials cache in milli-seconds (remote bind is an expensive
     # operation). Defaults to 0, set to 0 to disable.
-    # credentials_validity_in_ms: 0
+    credentials_validity_in_ms: <%= node['cassandra']['ldap_options']['credentials_validity_in_ms']%>
     # Validity period for the search cache in seconds. Defaults to 0, set to 0 to disable.
-    # search_validity_in_seconds: 0
+    search_validity_in_seconds: <%= node['cassandra']['ldap_options']['search_validity_in_seconds']%>
     # connection_pool:
         # max_active: 8
         # max_idle: 8
@@ -297,7 +297,7 @@ node_health_options:
 # Dse will need to be able to read and write to the directory.
 #
 # This directory should have 700 permissions and belong to the dse user
-system_key_directory: /etc/dse/conf
+system_key_directory: <%= node['cassandra']['dse']['system_key_directory'] %>
 
 # If this is set to true, DSE will expect the following config values to be encrypted:
 #   resources/cassandra/conf/cassandra.yaml:
@@ -312,7 +312,7 @@ system_key_directory: /etc/dse/conf
 # it's an error if the passwords aren't encrypted
 #
 # config values can be encrypted with dsetool encryptconfigvalue
-config_encryption_active: false
+config_encryption_active: <%= node['cassandra']['dse']['config_encryption_active'] %>
 
 # the name of the system key used to encrypt / decrypt passwords stored
 # in configuration files.
@@ -321,7 +321,7 @@ config_encryption_active: false
 # this name isn't in the system key directory
 #
 # keyfiles, and KMIP managed keys can be created with dsetool createsystemkey
-config_encryption_key_name: system_key
+config_encryption_key_name: <%= node['cassandra']['dse']['config_encryption_key_name'] %>
 
 # Spark
 # The fraction of available system resources to be used by Spark Worker
@@ -434,13 +434,13 @@ audit_logging_options:
 # system_traces keyspace. Those tables should be configured to encrypt their data
 # on disk by using an encrypting compressor.
 system_info_encryption:
-  enabled: false
-  cipher_algorithm: AES
-  secret_key_strength: 128
-  chunk_length_kb: 64
+  enabled: <%= node['cassandra']['dse']['system_info_encryption']['enabled'] %>
+  cipher_algorithm: <%= node['cassandra']['dse']['system_info_encryption']['cipher_algorithm'] %>
+  secret_key_strength: <%= node['cassandra']['dse']['system_info_encryption']['secret_key_strength'] %>
+  chunk_length_kb: <%= node['cassandra']['dse']['system_info_encryption']['chunk_length_kb'] %>
   # the name of the keys file that will be created to encrypt system tables.
   # This file will be created at <system_key_directory>/system/<key_name>
-  key_name: system_table_keytab
+  key_name: <%= node['cassandra']['dse']['system_info_encryption']['key_name'] %>
 
   # selects an alternate key provider for local encryption. Useful for
   # using a kmip host as a key provider

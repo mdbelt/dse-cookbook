@@ -92,6 +92,8 @@ default['cassandra']['ldap_options']['use_ssl'] = false
 default['cassandra']['ldap_options']['use_tls'] = false
 default['cassandra']['ldap_options']['user_search_base'] = ''
 default['cassandra']['ldap_options']['user_search_filter'] = '(sAMAccountName={0})'
+default['cassandra']['ldap_options']['credentials_validity_in_ms'] = 0
+default['cassandra']['ldap_options']['search_validity_in_seconds'] = 0
 
 # Allow pluggable metrics
 default['cassandra']['metrics_reporter']['enabled'] = false
