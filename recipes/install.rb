@@ -37,7 +37,7 @@ when 'ubuntu', 'debian'
 when 'redhat', 'centos', 'fedora', 'scientific', 'amazon'
   package 'dse-full' do
     version node['cassandra']['dse_version']
-    timeout 1800
+    timeout '1800'
     action :install
   end
 end
@@ -78,7 +78,7 @@ directory node['cassandra']['commit_dir'] do
 end
 
 # Make sure the saved_caches directory exists (in case we changed it from default)
-directory File.join(node.cassandra.root_dir, 'saved_caches') do
+directory File.join(node['cassandra']['root_dir'], 'saved_caches') do
   owner node['cassandra']['user']
   group node['cassandra']['group']
   mode '755'
