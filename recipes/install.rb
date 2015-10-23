@@ -37,7 +37,7 @@ when 'ubuntu', 'debian'
 when 'redhat', 'centos', 'fedora', 'scientific', 'amazon'
   package 'dse-full' do
     version node['cassandra']['dse_version']
-    timeout '1800'
+#    timeout '1800'
     action :install
   end
 end
