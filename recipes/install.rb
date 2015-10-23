@@ -37,18 +37,17 @@ when 'ubuntu', 'debian'
 when 'redhat', 'centos', 'fedora', 'scientific', 'amazon'
   package 'dse-full' do
     version node['cassandra']['dse_version']
-#    timeout '1800'
     action :install
   end
 end
 
-#create group
+# create group
 group node['cassandra']['group'] do
   system true
   action :create
 end
 
-#create user
+# create user
 user node['cassandra']['user'] do
   comment 'DSE Cassandra User'
   gid node['cassandra']['group']
