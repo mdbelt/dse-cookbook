@@ -96,38 +96,38 @@ shard_transport_options:
 # * Database Summary Statistics
 
 # CQL slow log settings
-cql_slow_log_threshold_ms: 100
-cql_slow_log_ttl: 86400
+#cql_slow_log_threshold_ms: 100
+#cql_slow_log_ttl: 86400
 
 # CQL system info tables settings
 cql_system_info_options:
-    enabled: true
+    enabled: false
     refresh_rate_ms: 10000
 
 # Data Resource latency tracking settings
 resource_level_latency_tracking_options:
-    enabled: true
+    enabled: false
     refresh_rate_ms: 10000
 
 # Database summary stats options
 db_summary_stats_options:
-    enabled: true
+    enabled: false
     refresh_rate_ms: 10000
 
 # Cluster summary stats options
 cluster_summary_stats_options:
-    enabled: true
+    enabled: false
     refresh_rate_ms: 10000
 
 # Column Family Histogram data tables options
 histogram_data_options:
-  enabled: true
+  enabled: false
   refresh_rate_ms: 10000
   retention_count: 3
 
 # User/Resource latency tracking settings
 user_level_latency_tracking_options:
-   enabled: true
+   enabled: false
    refresh_rate_ms: 10000
    top_stats_limit: 100
 
@@ -142,21 +142,3 @@ system_key_directory: /etc/dse/conf
 # This the only initial value, once it is reconfigured, the new value is stored
 # and retrieved on next run.
 initial_spark_worker_resources: 0.7
-
-audit_logging_options:
-   enabled: <%= node['cassandra']['audit_logging']%>
-   logger:  <%= node['cassandra']['audit_logger']%>
-   excluded_keyspaces: <%= node['cassandra']['excluded_keyspaces']%>
-   included_categories: <%= node['cassandra']['active_categories']%>
-   cassandra_audit_writer_options:
-      num_writers: <%= node['cassandra']['audit_num_writers']%>
-
-ldap_options:
-   server_host: <%= node['cassandra']['ldap_options']['server_host']%>
-   server_port: <%= node['cassandra']['ldap_options']['server_port']%>
-   search_dn: <%= node['cassandra']['ldap_options']['search_dn']%>
-   search_password: <%= node['cassandra']['ldap_options']['search_password']%>
-   use_ssl: <%= node['cassandra']['ldap_options']['use_ssl']%>
-   use_tls: <%= node['cassandra']['ldap_options']['use_tls']%>
-   user_search_base: <%= node['cassandra']['ldap_options']['user_search_base']%>
-   user_search_filter: <%= node['cassandra']['ldap_options']['user_search_filter']%>
