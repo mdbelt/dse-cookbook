@@ -82,7 +82,6 @@ default['cassandra']['authorizer']             = ''
 
 default['cassandra']['log_level']         = 'INFO'
 default['cassandra']['audit_logging']     = false
-default['cassandra']['audit_logger']      = 'SLF4JAuditWriter'
 default['cassandra']['audit_dir']         = '/etc/dse/cassandra'
 default['cassandra']['active_categories'] = 'ADMIN,AUTH,DDL,DCL'
 default['cassandra']['excluded_keyspaces'] = ''
