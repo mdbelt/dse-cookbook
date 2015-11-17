@@ -84,8 +84,6 @@ default['cassandra']['log_level']         = 'INFO'
 default['cassandra']['audit_logging']     = false
 default['cassandra']['audit_dir']         = '/etc/dse/cassandra'
 default['cassandra']['active_categories'] = 'ADMIN,AUTH,DDL,DCL'
-default['cassandra']['excluded_keyspaces'] = ''
-default['cassandra']['audit_num_writers'] = 0
 
 default['cassandra']['logback']['appender']['FILE']['class'] = 'ch.qos.logback.core.rolling.RollingFileAppender'
 default['cassandra']['logback']['appender']['FILE']['file'] = '${cassandra.logdir}/system.log'
