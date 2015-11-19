@@ -115,17 +115,6 @@ default['cassandra']['logback']['appender']['DroppedAuditEventAppender']['rollin
 default['cassandra']['logback']['appender']['DroppedAuditEventAppender']['triggeringPolicy']['class'] = 'ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy'
 default['cassandra']['logback']['appender']['DroppedAuditEventAppender']['triggeringPolicy']['maxFileSize'] = '200MB'
 
-default['cassandra']['ldap_options']['server_host'] = ''
-default['cassandra']['ldap_options']['server_port'] = '389'
-default['cassandra']['ldap_options']['search_dn'] = ''
-default['cassandra']['ldap_options']['search_password'] = ''
-default['cassandra']['ldap_options']['use_ssl'] = false
-default['cassandra']['ldap_options']['use_tls'] = false
-default['cassandra']['ldap_options']['user_search_base'] = ''
-default['cassandra']['ldap_options']['user_search_filter'] = '(sAMAccountName={0})'
-default['cassandra']['ldap_options']['credentials_validity_in_ms'] = 0
-default['cassandra']['ldap_options']['search_validity_in_seconds'] = 0
-
 # Allow pluggable metrics
 default['cassandra']['metrics_reporter']['enabled'] = false
 default['cassandra']['metrics_reporter']['name'] = 'metrics-graphite'
