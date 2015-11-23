@@ -157,6 +157,6 @@
   <logger name="org.apache.solr.handler.component" level="<%= node['cassandra']['log_level'] %>"/>
   <logger name="org.apache.solr.search.SolrIndexSearcher" level="<%= node['cassandra']['log_level'] %>"/>
   <logger name="org.apache.solr.update" level="<%= node['cassandra']['log_level'] %>"/>
-  <logger name="org.apache.lucene.index" level="INFO"/>
+  <logger name="org.apache.lucene.index" level="<%= node['cassandra']['log_level'] %>"/>
   <logger name="com.cryptsoft" level="OFF"/>
 </configuration>

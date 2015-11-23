@@ -21,7 +21,7 @@ template "#{node['cassandra']['audit_dir']}/log4j-server.properties" do
 end
 
 # set up logback temlate (audit logs, etc)
-template "#{node['cassandra']['audit_dir']}/logback.xml" do
+template "#{node['cassandra']['dse']['conf_dir']}/cassandra/logback.xml" do
   source 'logback.xml.erb'
   owner node['cassandra']['user']
   group node['cassandra']['group']
