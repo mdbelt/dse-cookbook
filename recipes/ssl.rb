@@ -54,14 +54,15 @@ end
 # ssl_search = partial_search(:node, "chef_environment:#{node.chef_environment} AND recipe:#{cookbook}*", :keys => {'name' => ['hostname'], 'pub_key' => ['cassandra_public_key']})
 
 # ssl_search.each_pair do |name,pub_key|
-# bash 'import public keys' do
-#  user node['cassandra']['user']
-#  code <<-EOH
-#  pass=$(head -n 1 #{node['cassandra']['dse']['cassandra_ssl_dir']}/#{node['cassandra']['dse']['password_file']})
-#  keytool -import -v -trustcacerts -alias #{node['hostname']} -file #{node['cassandra']['dse']['cassandra_ssl_dir']}/#{node['hostname']}.cer -keystore #{node['cassandra']['dse']['cassandra_ssl_dir']}/#{node['hostname']}.truststore -storepass $pass -noprompt && echo "true" > #{node['cassandra']['dse']['cassandra_ssl_dir']}/#{node['hostname']}.imported
-#  EOH
-#  not_if do
-#    File.exist?("#{node['cassandra']['dse']['cassandra_ssl_dir']}/#{node['hostname']}.imported")
-#  end
-# end
+ bash 'import public keys' do
+  user node['cassandra']['user']
+  code <<-EOH
+  pass=$(head -n 1 #{node['cassandra']['dse']['cassandra_ssl_dir']}/#{node['cassandra']['dse']['password_file']})
+  keytool -import -v -trustcacerts -alias #{node['hostname']} -file #{node['cassandra']['dse']['cassandra_ssl_dir']}/#{node['hostname']}.cer -keystore #{node['cassandra']['dse']['cassandra_ssl_dir']}/#{node['hostname']}.truststore -storepass $pass -noprompt && echo "true" > #{node['cassandra']['dse']['cassandra_ssl_dir']}/#{node['hostname']}.imported
+  EOH
+  not_if do
+    File.exist?("#{node['cassandra']['dse']['cassandra_ssl_dir']}/#{node['hostname']}.imported")
+  end
+  only_if {node['cassandra']['dse']['enable_import_public_keys']}
+ end
 # end
