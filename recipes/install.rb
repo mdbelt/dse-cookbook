@@ -59,7 +59,6 @@ user node['cassandra']['user'] do
   comment 'DSE Cassandra User'
   gid node['cassandra']['group']
   system true
-  shell '/bin/bash'
   action :create
 end
 
@@ -74,13 +73,16 @@ node['cassandra']['data_dir'].each do |dir|
   end
 end
 
-# Make sure the commit directory exists (in case we changed it from default)
-directory node['cassandra']['commit_dir'] do
-  owner node['cassandra']['user']
-  group node['cassandra']['group']
-  mode '755'
-  recursive true
-  action :create
+# Make sure the commit & saved_caches directory exists (in case we changed it from default)
+[node['cassandra']['commit_dir'],
+ File.join(node['cassandra']['root_dir'], 'saved_caches')].each do |dir|
+  directory dir do
+    owner node['cassandra']['user']
+    group node['cassandra']['group']
+    mode '755'
+    recursive true
+    action :create
+  end
 end
 
 # Make sure the saved_caches directory exists (in case we changed it from default)
