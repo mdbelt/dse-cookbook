@@ -85,14 +85,5 @@ end
   end
 end
 
-# Make sure the saved_caches directory exists (in case we changed it from default)
-directory File.join(node['cassandra']['root_dir'], 'saved_caches') do
-  owner node['cassandra']['user']
-  group node['cassandra']['group']
-  mode '755'
-  recursive true
-  action :create
-end
-
 # do you want the datastax-agent for opscenter?
 include_recipe 'dse::datastax_agent' if node['datastax-agent']['enabled']

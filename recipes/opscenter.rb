@@ -32,7 +32,6 @@ template '/etc/opscenter/opscenterd.conf' do
   mode '644'
   owner 'root'
   group 'root'
-  notifies :restart, 'service[opscenterd]'
 end
 
 service 'opscenterd' do
