@@ -22,7 +22,6 @@ default['cassandra']['packages']               = ['dse-libcassandra',
                                                   'dse-libpig',
                                                   'dse-libtomcat',
                                                   'dse-libsolr',
-                                                  'dse-libspark',
                                                   'dse-libsqoop',
                                                   'dse-pig',
                                                   'dse-demos'
