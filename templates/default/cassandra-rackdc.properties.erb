@@ -23,7 +23,7 @@ dc=solr<%= node['datacenter'] %>
 <% else %>
 dc=<%= node['datacenter'] %>
 <% end %>
-rack=RAC1
+rack=<%= node['rack'] %>
 
 # Add a suffix to a datacenter name. Used by the Ec2Snitch and Ec2MultiRegionSnitch
 # to append a string to the EC2 region name.
