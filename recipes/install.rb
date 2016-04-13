@@ -85,5 +85,15 @@ end
   end
 end
 
+remote_file "#{node['cassandra']['dse']['lib_dir']}/#{node['cassandra']['logback']['appender']['custom']['lib']['name']}.jar" do
+  source node['cassandra']['logback']['appender']['custom']['lib']['url']
+  owner node['cassandra']['user']
+  group node['cassandra']['group']
+  mode '755'
+  action :create
+  only_if { !node['cassandra']['logback']['appender']['custom']['lib']['name'].nil? }
+end
+
+
 # do you want the datastax-agent for opscenter?
 include_recipe 'dse::datastax_agent' if node['datastax-agent']['enabled']

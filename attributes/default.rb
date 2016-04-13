@@ -114,6 +114,11 @@ default['cassandra']['logback']['appender']['DroppedAuditEventAppender']['rollin
 default['cassandra']['logback']['appender']['DroppedAuditEventAppender']['triggeringPolicy']['class'] = 'ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy'
 default['cassandra']['logback']['appender']['DroppedAuditEventAppender']['triggeringPolicy']['maxFileSize'] = '200MB'
 
+default['cassandra']['logback']['appender']['custom']['lib']['name'] = nil
+default['cassandra']['logback']['appender']['custom']['lib']['url'] = "http://www.example.com"
+default['cassandra']['logback']['appender']['custom']['xml-appender'] = ""
+default['cassandra']['logback']['appender']['custom']['xml-appender-ref'] = ""
+
 # Allow pluggable metrics
 default['cassandra']['metrics_reporter']['enabled'] = false
 default['cassandra']['metrics_reporter']['name'] = 'metrics-graphite'
