@@ -4,6 +4,7 @@ default['cassandra']['vnodes']                 = true
 default['cassandra']['initial_token']          = ''
 default['cassandra']['num_tokens']             = '256'
 default['cassandra']['solr']		       = false
+default['cassandra']['graph']                  = false
 default['cassandra']['hadoop']                 = false
 default['cassandra']['spark']                  = false
 
@@ -42,7 +43,9 @@ default['cassandra']['root_dir']               = '/var/lib/cassandra/'
 default['cassandra']['commit_dir']             = '/var/lib/cassandra/commitlog'
 
 default['cassandra']['listen_address']         = node['ipaddress']
+default['cassandra']['listen_interface']       = nil
 default['cassandra']['rpc_address']            = node['ipaddress']
+default['cassandra']['rpc_interface']          = nil
 default['cassandra']['broadcast_rpc_address']  = nil
 default['cassandra']['broadcast_address']      = nil
 default['cassandra']['seeds']                  = node['ipaddress']
@@ -63,6 +66,7 @@ default['cassandra']['request_timeout_in_ms'] = 10_000
 default['cassandra']['thrift_framed_transport_size_in_mb'] = '15'
 default['cassandra']['thrift_max_message_length_in_mb'] = nil
 default['cassandra']['concurrent_compactors']   = nil
+default['cassandra']['permissions_validity_in_ms']  = 2000
 
 # Role based search to assign seed nodes.
 default['cassandra']['role_based_seeds'] = false
