@@ -101,6 +101,11 @@ default['cassandra']['logback']['appender']['FILE']['rollingPolicy']['maxHistory
 default['cassandra']['logback']['appender']['FILE']['triggeringPolicy']['class'] = 'ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy'
 default['cassandra']['logback']['appender']['FILE']['triggeringPolicy']['maxFileSize'] = '20MB'
 
+default['cassandra']['logback']['appender']['custom']['lib']['name'] = nil
+default['cassandra']['logback']['appender']['custom']['lib']['url'] = "http://www.example.com"
+default['cassandra']['logback']['appender']['custom']['xml-appender'] = ""
+default['cassandra']['logback']['appender']['custom']['xml-appender-ref'] = ""
+
 default['cassandra']['logback']['appender']['SLF4JAuditWriterAppender']['class'] = 'ch.qos.logback.core.rolling.RollingFileAppender'
 default['cassandra']['logback']['appender']['SLF4JAuditWriterAppender']['file'] = '${cassandra.logdir}/audit/audit.log'
 default['cassandra']['logback']['appender']['SLF4JAuditWriterAppender']['rollingPolicy']['class'] = 'ch.qos.logback.core.rolling.FixedWindowRollingPolicy'

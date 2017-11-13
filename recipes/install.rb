@@ -23,17 +23,18 @@ if File.exist?('/usr/bin/dse')
   end
 end
 
-# install the dse-full package
+# We need to install datastax-agent upfront because dse package has it as an
+# open dependency and therefore the specified datastax-agent version may not
+# be fulfilled.
+package 'datastax-agent' do
+  version node['datastax-agent']['version']
+  action :install
+end
+
+  # install the dse-full package
 case node['platform']
 # make sure not to overwrite any conf files on upgrade
 when 'ubuntu', 'debian'
-  # We need to install datastax-agent upfront because dse package has it as an
-  # open dependency and therefore the specified datastax-agent version may not
-  # be fulfilled.
-  package 'datastax-agent' do
-    version node['datastax-agent']['version']
-    action :install
-  end
   node['cassandra']['packages'].each do |pkg|
     package pkg do
       version node['cassandra']['dse_version']
@@ -83,6 +84,15 @@ end
     recursive true
     action :create
   end
+end
+
+remote_file "#{node['cassandra']['dse']['lib_dir']}/#{node['cassandra']['logback']['appender']['custom']['lib']['name']}.jar" do
+  source node['cassandra']['logback']['appender']['custom']['lib']['url']
+  owner node['cassandra']['user']
+  group node['cassandra']['group']
+  mode '755'
+  action :create
+  only_if { !node['cassandra']['logback']['appender']['custom']['lib']['name'].nil? }
 end
 
 # do you want the datastax-agent for opscenter?

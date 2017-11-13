@@ -53,14 +53,15 @@ max_memory_to_lock_fraction: 0.20
 #                authentication is successful, the user is logged in. If the
 #                authentication fails, an authentication error is returned. If no
 #                credentials are passed, the user is logged in as anonymous
-# authentication_options:
-#     enabled: false
-#     default_scheme: internal
-#     allow_digest_with_kerberos: true
-#     plain_text_without_ssl: warn
-#     transitional_mode: disabled
-#     other_schemes:
-#     scheme_permissions: false
+<%= !node['cassandra']['dse']['authentication_options'].nil? ? "authentication_options:" : "# authentication_options:"%>
+<%= !node['cassandra']['dse']['authentication_options'].nil? && !node['cassandra']['dse']['authentication_options']['enabled'].nil? ? "   enabled: #{node['cassandra']['dse']['authentication_options']['enabled']}" : "#     enabled: false"%>
+<%= !node['cassandra']['dse']['authentication_options'].nil? && !node['cassandra']['dse']['authentication_options']['default_scheme'].nil? ? "   default_scheme: #{node['cassandra']['dse']['authentication_options']['default_scheme']}" : "#     default_scheme: internal"%>
+<%= !node['cassandra']['dse']['authentication_options'].nil? && !node['cassandra']['dse']['authentication_options']['allow_digest_with_kerberos'].nil? ? "   allow_digest_with_kerberos: #{node['cassandra']['dse']['authentication_options']['allow_digest_with_kerberos']}" : "#     allow_digest_with_kerberos: true"%>
+<%= !node['cassandra']['dse']['authentication_options'].nil? && !node['cassandra']['dse']['authentication_options']['plain_text_without_ssl'].nil? ? "   plain_text_without_ssl: #{node['cassandra']['dse']['authentication_options']['plain_text_without_ssl']}" : "#     plain_text_without_ssl: warn"%>
+<%= !node['cassandra']['dse']['authentication_options'].nil? && !node['cassandra']['dse']['authentication_options']['transitional_mode'].nil? ? "   transitional_mode: #{node['cassandra']['dse']['authentication_options']['transitional_mode']}" : "#     transitional_mode: disabled"%>
+<%= !node['cassandra']['dse']['authentication_options'].nil? && !node['cassandra']['dse']['authentication_options']['other_schemes'].nil? ? "   other_schemes:" : "#     other_schemes:"%>
+<%= !node['cassandra']['dse']['authentication_options'].nil? && !node['cassandra']['dse']['authentication_options']['other_schemes'].nil? ? "     #{node['cassandra']['dse']['authentication_options']['other_schemes']}" : "# "%>
+<%= !node['cassandra']['dse']['authentication_options'].nil? && !node['cassandra']['dse']['authentication_options']['scheme_permissions'].nil? ? "   scheme_permissions: #{node['cassandra']['dse']['authentication_options']['scheme_permissions']}" : "#     scheme_permissions: false"%>
 
 ##########################
 # Role Management Options
@@ -73,8 +74,8 @@ max_memory_to_lock_fraction: 0.20
 #              using the GRANT ROLE and REVOKE ROLE statements
 #   ldap - the granting and revoking of roles is managed by an external
 #          LDAP server configured using the ldap_options.
-# role_management_options:
-#     mode: internal
+<%= !node['cassandra']['dse']['role_management_options'].nil? ? "role_management_options:" : "# role_management_options:"%>
+<%= !node['cassandra']['dse']['role_management_options'].nil? && !node['cassandra']['dse']['role_management_options']['mode'].nil? ? "   mode: #{node['cassandra']['dse']['role_management_options']['mode']}" : "#     mode: internal"%>
 
 ##########################
 # Authorization options
@@ -91,10 +92,10 @@ max_memory_to_lock_fraction: 0.20
 #                users
 #   allow_row_level_security - In order for row level security to be used, this must be set to allow it
 #                              for the entire system. true or false
-# authorization_options:
-#     enabled: false
-#     transitional_mode: disabled
-#     allow_row_level_security: false
+<%= !node['cassandra']['dse']['authorization_options'].nil? ? "authorization_options:" : "# authorization_options:"%>
+<%= !node['cassandra']['dse']['authorization_options'].nil? && !node['cassandra']['dse']['authorization_options']['enabled'].nil? ? "   enabled: #{node['cassandra']['dse']['authorization_options']['enabled']}" : "#     enabled: false"%>
+<%= !node['cassandra']['dse']['authorization_options'].nil? && !node['cassandra']['dse']['authorization_options']['transitional_mode'].nil? ? "   transitional_mode: #{node['cassandra']['dse']['authorization_options']['transitional_mode']}" : "#     transitional_mode: disabled"%>
+<%= !node['cassandra']['dse']['authorization_options'].nil? && !node['cassandra']['dse']['authorization_options']['allow_row_level_security'].nil? ? "   allow_row_level_security: #{node['cassandra']['dse']['authorization_options']['allow_row_level_security']}" : "#     allow_row_level_security: false"%>
 
 ##########################
 # Kerberos options
@@ -124,7 +125,7 @@ kerberos_options:
 # ldap_options:
 #     server_host:
 #
-<%= ("com.datastax.bdp.cassandra.auth.LdapAuthenticator".eql?(node['cassandra']['authenticator'])) ? "ldap_options:" : "# ldap_options:" %>
+<%= ("com.datastax.bdp.cassandra.auth.LdapAuthenticator".eql?(node['cassandra']['authenticator']) || "LDAP".eql?(node['cassandra']['dse']['authentication_options']['default_scheme'])) ? "ldap_options:" : "# ldap_options:" %>
     <%= !node['cassandra']['dse']['ldap_options']['server_host'].nil? ? "server_host: #{node['cassandra']['dse']['ldap_options']['server_host']}" : "# server_host: localhost"%>
 #     # Port to use to connect to the LDAP server. This is normally 389 for unencrypted
 #     # connections and 636 for ssl encrypted connections. If use_tls is set to true, use the

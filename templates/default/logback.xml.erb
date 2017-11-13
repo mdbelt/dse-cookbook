@@ -68,9 +68,12 @@
     </then>
   </if>
 
+  <%= node['cassandra']['logback']['appender']['custom']['xml-appender']%>
+
   <root level="<%= node['cassandra']['log_level'] %>">
     <appender-ref ref="FILE" />
     <appender-ref ref="STDOUT" />
+    <%= node['cassandra']['logback']['appender']['custom']['xml-appender-ref']%>
   </root>
 
   <!--audit log-->
