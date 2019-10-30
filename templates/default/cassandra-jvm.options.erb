@@ -46,24 +46,41 @@
 # same state as before bootstrapping.
 #-Dcassandra.replace_address=listen_address or broadcast_address of dead node
 
+# Use this option to perform consistent replace, where the replacement node will coordinate an anti-entropy
+# (repair) job with a majority of replicas during the replacement process ensuring the node has the
+# specified consistency after replacement is completed.
+#
+# The default option ONE will only stream data from a single replica, which may be inconsistent. It is
+# recommended to specify a value different from the default when reading/writing at QUORUM/LOCAL_QUORUM.
+# Alternatively it's possible to run repair after replacement is completed, but stale data may be returned
+# before the repair is finished.
+#
+# Available options: ONE(default), LOCAL_QUORUM, QUORUM. Only valid when combined with
+# -Dcassandra.replace_address or -Dcassandra.replace_address_first_boot options.
+#
+#-Ddse.consistent_replace=ONE
+
+# Specifies how many ranges will be repaired simultaneously during consistent replace. The higher the
+# parallelism, the more resources will be consumed cluster-wide, what may affect cluster performance.
+#-Ddse.consistent_replace.parallelism=2
+
+# Specifies how many times a failed repair will be retried during consistent replace.
+# If all retries fail, consistent replace will fail, but can be resumed with nodetool bootstrap resume.
+#-Ddse.consistent_replace.retries=3
+
+# Targeted keyspaces or tables for consistent replace can be specified as: "ks1, ks2.cf1",
+# By default it's empty, all tables and keyspaces will be consistent replaced
+#-Ddse.consistent_replace.whitelist=
+
 # Allow restoring specific tables from an archived commit log.
 #-Dcassandra.replayList=table
 
-# Allows overriding of the default RING_DELAY (1000ms), which is the amount of time a node waits
+# Allows overriding of the default RING_DELAY (30000ms), which is the amount of time a node waits
 # before joining the ring.
 #-Dcassandra.ring_delay_ms=ms
 
-# Set the port for the Thrift RPC service, which is used for client connections. (Default: 9160)
-#-Dcassandra.rpc_port=port
-
 # Set the SSL port for encrypted communication. (Default: 7001)
 #-Dcassandra.ssl_storage_port=port
-
-# Enable or disable the native transport server. See start_native_transport in cassandra.yaml.
-# cassandra.start_native_transport=true|false
-
-# Enable or disable the Thrift RPC server. (Default: true)
-#-Dcassandra.start_rpc=true/false
 
 # Set the port for inter-node communication. (Default: 7000)
 #-Dcassandra.storage_port=port
@@ -72,7 +89,7 @@
 #-Dcassandra.triggers_dir=directory
 
 # For testing new compaction and compression strategies. It allows you to experiment with different
-# strategies and benchmark write performance differences without affecting the production workload.
+# strategies and benchmark write performance differences without affecting the production workload. 
 #-Dcassandra.write_survey=true
 
 # To disable configuration via JMX of auth caches (such as those for credentials, permissions and
@@ -84,6 +101,9 @@
 # initial index build/rebuild). If set to true, the page size will be fixed to the default of
 # 10000 rows per page.
 #-Dcassandra.force_default_indexing_page_size=true
+
+# Imposes an upper bound on hint lifetime below the normal min gc_grace_seconds
+#-Dcassandra.maxHintTTL=max_hint_ttl_in_seconds
 
 ########################
 # GENERAL JVM SETTINGS #
@@ -98,7 +118,7 @@
 
 # allows lowering thread priority without being root on linux - probably
 # not necessary on Windows but doesn't harm anything.
-# see http://tech.stolsvik.com/2010/01/linux-java-thread-priorities-workar
+# see http://tech.stolsvik.com/2010/01/linux-java-thread-priorities-workaround.html
 -XX:ThreadPriorityPolicy=42
 
 # Enable heap-dump if there's an OOM
@@ -115,9 +135,6 @@
 # transparent hugepage allocation more effective.
 -XX:+AlwaysPreTouch
 
-# Disable biased locking as it does not benefit Cassandra.
--XX:-UseBiasedLocking
-
 # Enable thread-local allocation blocks and allow the JVM to automatically
 # resize them at runtime.
 -XX:+UseTLAB
@@ -132,18 +149,34 @@
 # comment out this entry to enable IPv6 support).
 -Djava.net.preferIPv4Stack=true
 
-### Debug options
+# Honor user code @Contended annotations
+-XX:-RestrictContended
 
-# uncomment to enable flight recorder
+# Decrease frequency of guaranteed safepoints to avoid needless pauses
+-XX:+UnlockDiagnosticVMOptions
+-XX:GuaranteedSafepointInterval=300000
+
+# Disable biased locking to avoid biased lock revokation pauses
+-XX:-UseBiasedLocking
+
+### Debug/profiling options
+
+# There's no adverse side effect to enabling the debug info, so leave on by default to allow better info for profilers
+-XX:+UnlockDiagnosticVMOptions
+-XX:+DebugNonSafepoints
+
+# If you plan to profile using perf you will need to enable this option
+#-XX:+PreserveFramePointer
+
+# Uncomment to enable flight recorder (Use in production is subject to Oracle licensing)
 #-XX:+UnlockCommercialFeatures
 #-XX:+FlightRecorder
+
 
 # uncomment to have Cassandra JVM listen for remote debuggers/profilers on port 1414
 #-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1414
 
 # uncomment to have Cassandra JVM log internal method compilation (developers only)
-#-XX:+UnlockDiagnosticVMOptions
-#-XX:+DebugNonSafepoints
 #-XX:+LogCompilation
 
 #################
@@ -166,14 +199,14 @@
 # so that we can lock the heap in memory on startup to prevent any
 # of it from being swapped out.
 <% if node['cassandra']['solr'] %>
+-Xms<%= node['solr']['max_heap_size'] %>
 -Xmx<%= node['solr']['max_heap_size'] %>
--Xms<%= node['solr']['heap_newsize'] %>
 <% elsif node['cassandra']['hadoop'] %>
+-Xms<%= node['hadoop']['max_heap_size'] %>
 -Xmx<%= node['hadoop']['max_heap_size'] %>
--Xms<%= node['hadoop']['heap_newsize'] %>
 <% else %>
+-Xms<%= node['cassandra']['max_heap_size'] %>
 -Xmx<%= node['cassandra']['max_heap_size'] %>
--Xms<%= node['cassandra']['heap_newsize'] %>
 <% end %>
 
 # Young generation size is automatically calculated by cassandra-env
@@ -190,14 +223,38 @@
 # The example below assumes a modern 8-core+ machine for decent
 # times. If in doubt, and if you do not particularly want to tweak, go
 # 100 MB per physical CPU core.
-#-Xmn800M
+<% if node['cassandra']['solr'] %>
+-Xmn<%= node['solr']['heap_newsize'] %>
+<% elsif node['cassandra']['hadoop'] %>
+-Xmn<%= node['hadoop']['heap_newsize'] %>
+<% else %>
+-Xmn<%= node['cassandra']['heap_newsize'] %>
+<% end %>
+
+################
+# NIO SETTINGS #
+################
+
+# Limit maximum cached thread local direct buffer to 1MB to avoid native OOM
+# See https://bugs.openjdk.java.net/browse/JDK-8147468
+-Djdk.nio.maxCachedBufferSize=1048576
+
+###################################
+# EXPIRATION DATE OVERFLOW POLICY #
+###################################
+
+# Defines how to handle INSERT requests with TTL exceeding the maximum supported expiration date:
+# * REJECT: this is the default policy and will reject any requests with expiration date timestamp after 2038-01-19T03:14:06+00:00.
+# * CAP: any insert with TTL expiring after 2038-01-19T03:14:06+00:00 will expire on 2038-01-19T03:14:06+00:00 and the client will receive a warning.
+# * CAP_NOWARN: same as previous, except that the client warning will not be emitted.
+#
+#-Dcassandra.expiration_date_overflow_policy=REJECT
 
 #################
 #  GC SETTINGS  #
 #################
 
 ### CMS Settings (comment out the G1 section and uncomment section below to enable)
-
 #-XX:+UseParNewGC
 #-XX:+UseConcMarkSweepGC
 #-XX:+CMSParallelRemarkEnabled
@@ -215,6 +272,7 @@
 
 # Use the Hotspot garbage-first collector.
 -XX:+UseG1GC
+-XX:+ParallelRefProcEnabled
 
 # Have the JVM do less remembered set work during STW, instead
 # preferring concurrent GC. Reduces p99.9 latency.
@@ -241,14 +299,34 @@
 
 ### GC logging options -- uncomment to enable
 
-#-XX:+PrintGCDetails
-#-XX:+PrintGCDateStamps
-#-XX:+PrintHeapAtGC
-#-XX:+PrintTenuringDistribution
-#-XX:+PrintGCApplicationStoppedTime
-#-XX:+PrintPromotionFailure
+-XX:+PrintGCDetails
+-XX:+PrintGCDateStamps
+-XX:+PrintHeapAtGC
+-XX:+PrintTenuringDistribution
+-XX:+PrintGCApplicationStoppedTime
+-XX:+PrintPromotionFailure
 #-XX:PrintFLSStatistics=1
+# A default location is set in cassandra-env.sh
 #-Xloggc:/var/log/cassandra/gc.log
-#-XX:+UseGCLogFileRotation
-#-XX:NumberOfGCLogFiles=10
-#-XX:GCLogFileSize=10M
+-XX:+UseGCLogFileRotation
+-XX:NumberOfGCLogFiles=10
+-XX:GCLogFileSize=10M
+
+# Netty queue limit (per core). Effectively acts as an amount of "pending" requests scheduled by Netty
+# and tasks scheduled from TPC tasks.
+-Dio.netty.eventLoop.maxPendingTasks=65536
+
+# Uncomment this property to configure the type of off-heap memory used by network byte buffer allocators (Netty allocators).
+# Setting this value to zero means that Netty allocations are performed with the JVM NIO allocators, therefore are subject to the limit set with -XX:MaxDirectMemorySize.
+# Setting this to -1 (the default) or to a positive value means that Netty will allocate native memory directly, bypassing the JVM direct memory metrics and thresholds.
+# With -1 the maximum allocated memory is the same as what's specified with -XX:MaxDirectMemorySize, whereas setting it to a positive value will set a specific limit.
+# Note that in future releases (6.8 onwards) the default value of this property will change from -1 to 0. Uncommenting this value sooner is safe, but may require
+# higher direct memory limits by setting the MAX_DIRECT_MEMORY environment variable, which in turns will set -XX:MaxDirectMemorySize.
+#-Dio.netty.maxDirectMemory=-1
+<% if node['cassandra']['max_direct_memory'] %>
+-Dio.netty.maxDirectMemory=0
+
+-XX:MaxDirectMemorySize=<%= node['cassandra']['max_direct_memory'] %>
+<% end %>
+
+# The newline in the end of file is intentional
