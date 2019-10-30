@@ -2,7 +2,8 @@ include_recipe 'dse::configure'
 
 service node['cassandra']['dse']['service_name'] do
   supports :restart => true, :status => true
-  action [:enable, :start]
+#  action [:enable, :start]
+  action [:enable]
   subscribes :restart, 'java_ark[jdk]'
   subscribes :restart, 'package[dse-full]'
   subscribes :restart, 'template[/etc/default/dse]'
