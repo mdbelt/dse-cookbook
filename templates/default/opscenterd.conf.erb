@@ -62,6 +62,9 @@ enabled = <%= node['opscenter']['auth_enabled'] %>
 <%= !node['opscenter']['ldap']['connection_timeout'].nil? ? "connection_timeout: #{node['opscenter']['ldap']['connection_timeout']}" + "\n": "" -%>
 <%= !node['opscenter']['ldap']['opt_referrals'].nil? ? "opt_referrals: #{node['opscenter']['ldap']['opt_referrals']}" + "\n": "" -%>
 <%= !node['opscenter']['ldap']['protocol_version'].nil? ? "protocol_version: #{node['opscenter']['ldap']['protocol_version']}" + "\n": "" -%>
+<%= !node['opscenter']['ldap']['truststore'].nil? ? "truststore: #{node['opscenter']['ldap']['truststore']}" + "\n": "" -%>
+<%= !node['opscenter']['ldap']['truststore_pass'].nil? ? "truststore_pass: #{node['opscenter']['ldap']['truststore_pass']}" + "\n": "" -%>
+<%= !node['opscenter']['ldap']['truststore_type'].nil? ? "truststore_type: #{node['opscenter']['ldap']['truststore_type']}" + "\n": "" -%>
 <% end -%>
 
 <% if node["opscenter"]["use_longpoll"] -%>

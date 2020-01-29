@@ -40,3 +40,6 @@ default['opscenter']['ldap']['ldap_security'] = nil
 default['opscenter']['ldap']['connection_timeout'] = nil
 default['opscenter']['ldap']['opt_referrals'] = nil
 default['opscenter']['ldap']['protocol_version'] = nil
+default['opscenter']['ldap']['truststore'] = nil
+default['opscenter']['ldap']['truststore_pass'] = nil
+default['opscenter']['ldap']['truststore_type'] = nil
